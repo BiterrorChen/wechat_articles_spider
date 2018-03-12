@@ -294,6 +294,7 @@ class OfficialWeChat(object):
             # 返回与输入公众号名称最接近的公众号信息
             official = self.s.get(
                 search_url, headers=self.headers, params=self.params)
+            print(official.json())
             return official.json()["list"][0]
         except Exception:
             raise Exception(u"公众号名称错误或cookie、token错误，请重新输入")

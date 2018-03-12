@@ -1,8 +1,15 @@
 # coding:  utf-8
 import re
+from bs4 import BeautifulSoup 
 
 import requests
 
+def word_count(str):
+    if str == None:
+        return 0
+    pattern = re.compile(u"[\u4e00-\u9fa5]+")
+    result = re.findall(pattern,str)
+    return len(result)
 
 class LoginWeChat(object):
     """
@@ -146,6 +153,26 @@ class LoginWeChat(object):
                                 res.text)[0].split(" ")[-1][1:-1]
         return comment_id
 
+    def get_chara_pic_num(self, article_url):
+        res = self.s.post(article_url, data=self.data)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        real_article = soup.find('div', attrs={"class":"rich_media_content ", "id":"js_content"})
+        if real_article == None:
+            print(article_url)
+            return 0, 0
+        # picture num
+        pic = real_article.find_all(name='img')
+        pic_num = len(pic)
+
+        #word num
+        word = real_article.find_all(name='span')
+        word_num = 0
+        for w in word:
+            # print(w.string)
+            word_num += word_count(w.string)
+
+        return pic_num, word_num
+
     def __get_params(self, article_url):
         """
         解析文章url, 获取必要的请求参数
@@ -165,7 +192,7 @@ class LoginWeChat(object):
         string_lst = article_url.split("?")[1].split("&")
         dict_value = [string[string.index("=") + 1:] for string in string_lst]
         __biz, mid, idx, sn, *_ = dict_value
-        sn = sn[:-3] if sn[-3] == "#"　else sn
+        sn = sn[:-3] if sn[-3] == "#" else sn
         return __biz, mid, idx, sn
 
     def __get_appmsgext(self, article_url):

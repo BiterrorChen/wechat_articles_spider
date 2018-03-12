@@ -122,3 +122,22 @@ class Reader:
             path, outfile)
         os.system(command)
         return self.__request(outfile)
+
+    def contralNoNeedRequest(self, outfile):
+        """
+        控制函数，调用命令保存http请求，并筛选获取appmsg_token和cookie
+        Parameters
+        ----------
+        outfile: str
+            文件路径
+
+        Returns
+        -------
+        (str, str)
+            appmsg_token, cookie：需要的参数
+        """
+        # path = os.path.split(os.path.realpath(__file__))[0]
+        # command = "mitmdump -q -s {}/tools.py -w {} mp.weixin.qq.com/mp/getappmsgext".format(
+            # path, outfile)
+        # os.system(command)
+        return self.__request(outfile)

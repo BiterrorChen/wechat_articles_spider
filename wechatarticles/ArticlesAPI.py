@@ -3,6 +3,8 @@
 from .LoginWeChat import LoginWeChat
 from .OfficialWeChat import OfficialWeChat
 from .ReadOutfile import Reader
+from .tools import tools
+import time
 
 
 class ArticlesAPI(object):
@@ -52,7 +54,7 @@ class ArticlesAPI(object):
         # 支持两种方式， mitmproxy自动获取参数和手动获取参数
         if (appmsg_token == None) and (wechat_cookie == None) and (outfile !=
                                                                    None):
-            self.appmsg_token, self.cookie = Reader().contral(outfile)
+            self.appmsg_token, self.cookie = Reader().contralNoNeedRequest(outfile)
         elif (appmsg_token != None) and (wechat_cookie != None):
             self.appmsg_token, self.cookie = appmsg_token, wechat_cookie
         else:
@@ -133,9 +135,14 @@ class ArticlesAPI(object):
         # 提取每个文章的url，获取文章的点赞、阅读、评论信息，并加入到原来的json中
         for data in artiacle_data:
             article_url = data["link"]
-            comments = self.wechat.get_comments(article_url)
+            # comments = self.wechat.get_comments(article_url)
             read_like_num = self.wechat.get_read_like_num(article_url)
-            data["comments"] = comments
+            pic_word_num = self.wechat.get_chara_pic_num(article_url)
+            t = data["update_time"]
+            # data["comments"] = comments
             data["read_num"], data["like_num"] = read_like_num
+            data["update_time"] = tools.timestamp2date(t)
+            data["pic_num"], data["word_num"] = pic_word_num
+            time.sleep(5)
 
         return artiacle_data
