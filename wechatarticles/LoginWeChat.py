@@ -4,11 +4,11 @@ from bs4 import BeautifulSoup
 
 import requests
 
-def word_count(str):
-    if str == None:
+def word_count(string):
+    if string == None:
         return 0
-    pattern = re.compile(u"[\u4e00-\u9fa5]+")
-    result = re.findall(pattern,str)
+    pattern = re.compile(u"[\u4e00-\u9fa5]")
+    result = re.findall(pattern,string)
     return len(result)
 
 class LoginWeChat(object):

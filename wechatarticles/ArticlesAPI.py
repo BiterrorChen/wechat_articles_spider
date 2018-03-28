@@ -131,18 +131,21 @@ class ArticlesAPI(object):
         # 获取文章数据
         artiacle_data = self.officical.get_articles(
             nickname, begin=str(begin), count=str(count))
+        time.sleep(4)
 
         # 提取每个文章的url，获取文章的点赞、阅读、评论信息，并加入到原来的json中
         for data in artiacle_data:
             article_url = data["link"]
             # comments = self.wechat.get_comments(article_url)
             read_like_num = self.wechat.get_read_like_num(article_url)
+            time.sleep(2)
             pic_word_num = self.wechat.get_chara_pic_num(article_url)
+            time.sleep(2)
             t = data["update_time"]
             # data["comments"] = comments
             data["read_num"], data["like_num"] = read_like_num
             data["update_time"] = tools.timestamp2date(t)
             data["pic_num"], data["word_num"] = pic_word_num
-            time.sleep(5)
+            time.sleep(2)
 
         return artiacle_data

@@ -7,7 +7,7 @@ import re
 import os
 
 
-# command: python get_params outfile
+# command: python get_params outfile, set proxy and port 8080
 def get_params(outfile):
     with open(outfile, "rb") as logfile:
         freader = io.FlowReader(logfile)
